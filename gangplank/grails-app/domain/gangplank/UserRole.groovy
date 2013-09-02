@@ -33,7 +33,7 @@ class UserRole implements Serializable {
 	}
 
 	static boolean remove(User user, Role role, boolean flush = false) {
-		userrole instance = UserRole.findByUserAndRole(user, role)
+		UserRole instance = UserRole.findByUserAndRole(user, role)
 		if (!instance) {
 			return false
 		}
