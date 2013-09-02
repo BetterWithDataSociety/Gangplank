@@ -1,6 +1,6 @@
 package gangplank
 
-class role {
+class Role {
 
 	String authority
 

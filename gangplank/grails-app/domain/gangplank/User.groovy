@@ -1,6 +1,6 @@
 package gangplank
 
-class user {
+class User {
 
 	transient springSecurityService
 
@@ -20,8 +20,8 @@ class user {
 		password column: '`password`'
 	}
 
-	Set<role> getAuthorities() {
-		userrole.findAllByuser(this).collect { it.role } as Set
+	Set<Role> getAuthorities() {
+		UserRole.findAllByuser(this).collect { it.role } as Set
 	}
 
 	def beforeInsert() {
