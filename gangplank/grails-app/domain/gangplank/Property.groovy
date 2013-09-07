@@ -6,6 +6,7 @@ class Property {
     schema:Schema
   ]
 
+  String label
   String name
 
   static constraints = {

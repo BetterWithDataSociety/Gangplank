@@ -68,7 +68,9 @@ class SubmitController {
 
       }
 
-      redirect(controller:'browse', action:'index', params:[file:new_datafile.guid, schema:gangplank_schema]);
+      redirect(controller:'browse', 
+               action:'index', 
+               params:[file:new_datafile.guid, schema:gangplank_schema, q:"sourceFile:\"${new_datafile.guid}\""]);
     }
 
   }
