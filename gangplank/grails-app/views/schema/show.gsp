@@ -9,20 +9,15 @@
 
    <div class="container-fluid">
 
-     <h1>List of registered schemas</h1>
+     <h1>Schema Props</h1>
 
      <table class="table table-bordered table-striped">
        <thead>
          <tr>
-           <td>Schema name</td>
+           <td>Properties</td>
          </tr>
        </thead>
        <tbody>
-         <g:each in="${schemas}" var="s">
-           <tr>
-             <td><g:link controller="schema" action="show" id="${s.id}">${s.name}</g:link></td>
-           </tr>
-         </g:each>
        </tbody>
      </table>
    </div>

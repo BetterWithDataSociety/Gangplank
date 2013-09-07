@@ -7,4 +7,7 @@ class SchemaController {
     result.schemas = Schema.findAll()
     result
   }
+
+  def show() {
+  }
 }
