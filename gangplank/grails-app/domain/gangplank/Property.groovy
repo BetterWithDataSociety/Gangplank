@@ -8,6 +8,7 @@ class Property {
 
   String label
   String name
+  Boolean mandatory
 
   static constraints = {
   }

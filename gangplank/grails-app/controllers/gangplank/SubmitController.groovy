@@ -19,26 +19,46 @@ class SubmitController {
       def upload_filename = request.getFile("submissionFile")?.getOriginalFilename()
       def input_stream = request.getFile("submissionFile")?.inputStream
 
-      def gangplank_schema = 'Finance.Expenses';
-      def new_datafile = new Datafile(schema:Schema.findByName(gangplank_schema), 
+      log.debug("Done");
+      CSVReader r = null
+      if ( params.type=="csv" ) {
+        r = new CSVReader( new InputStreamReader(input_stream, java.nio.charset.Charset.forName('UTF-8') ), (char)',' )
+      }
+      else {
+        r = new CSVReader( new InputStreamReader(input_stream, java.nio.charset.Charset.forName('UTF-8') ), (char)'\t' )
+      }
+
+      String[] coldefs
+      String[] nl
+      coldefs = r.readNext()
+
+
+
+      def schema = null
+      if ( params.schemaid == '' ) {
+        log.debug("Generate a new schema based on content");
+        schema = new Schema(name:"Auto generated from ${upload_filename}").save();
+        coldefs.each { col ->
+          def dbprop = new Property(
+                              schema:schema,
+                              name:col.toLowerCase(),
+                              label:col,
+                              mandatory:false).save();
+
+        }
+      }
+      else {
+        log.debug("Lookup schema with id ${schemaid}");
+        schema = Schema.get(schemaid);
+      }
+
+      def new_datafile = new Datafile(schema:schema,
                                       guid:java.util.UUID.randomUUID().toString(),
                                       filename:upload_filename,
                                       status:RefdataCategory.lookupOrCreate('DatafileStatus', 'Pending Compliance Review')).save()
 
-      log.debug("Done");
+      def gangplank_schema = schema.name
 
-      CSVReader r = null
-      r = new CSVReader( new InputStreamReader(input_stream, java.nio.charset.Charset.forName('UTF-8') ), (char)'\t' )
-
-      String[] coldefs
-      String[] nl
-
-      coldefs = r.readNext()
-
-      log.debug("Column headings:");
-      nl.each { str ->
-        log.debug("  -> ${str}");
-      }
 
       def data_rownum = 0;
 
@@ -50,14 +70,23 @@ class SubmitController {
         record_to_index.gangplankTimestamp = new Date();
         record_to_index.sourceFile = new_datafile.guid
 
+        boolean row_has_at_least_one_value = false
+
         nl.each { str ->
-          log.debug("  -> ${str}");
-          record_to_index[coldefs[col++].toLowerCase()] = str
+          if ( col <= coldefs.length ) {
+            record_to_index[coldefs[col++].toLowerCase()] = str
+          }
+          else {
+            record_to_index["indefined_col_${col++}"]=str
+          }
+
+          if ( ( str != null ) && ( str.length() > 0 ) )
+            row_has_at_least_one_value = true;
         }
 
         // This if emulates the schema validation rules.. here I'm pretending that the rule is
         // name must not be null.
-        if ( ( record_to_index.name != null ) && ( record_to_index.name.length() > 0 ) ) {
+        if ( row_has_at_least_one_value ) {
           log.debug("Record I'm going to throw at ES: ${record_to_index}");
           def future = esclient.index {
             index "gangplank"

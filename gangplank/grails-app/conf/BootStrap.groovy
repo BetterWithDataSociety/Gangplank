@@ -23,7 +23,11 @@ class BootStrap {
     expenses_props.each { propdef ->
       def dbprop = Property.findBySchemaAndName(expenses_schema, propdef.propname)
       if ( dbprop == null ) {
-        dbprop = new Property(schema:expenses_schema, name:propdef.propname, label:propdef.label).save();
+        dbprop = new Property(
+                              schema:expenses_schema, 
+                              name:propdef.propname, 
+                              label:propdef.label, 
+                              mandatory:true).save();
       }
     }
 

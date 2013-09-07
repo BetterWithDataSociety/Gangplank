@@ -21,10 +21,21 @@
 
            <div class="control-group">
              <dt>Schema</dt>
-             <dd><g:select id="schematype" name='schema.id' 
+             <dd><g:select id="schematype" name='schemaid' 
+                   noSelection="['':'-Generate a new schema based on file-']"
                    from='${gangplank.Schema.list()}'
                    optionKey="id" optionValue="name"></g:select></dd>
            </div>
+
+           <div class="control-group">
+             <dt>FileType</dt>
+             <dd><select name="type">
+                    <option value="csv">CSV</option>
+                    <option value="tsv">TSV</option>
+                 </select>
+             </dd>
+           </div>
+
            <div class="control-group">
              <dt></dt>
              <dd><button type="submit" class="btn btn-primary">Upload</button></dd>

@@ -9,5 +9,8 @@ class SchemaController {
   }
 
   def show() {
+    def result = [:]
+    result.schema = Schema.get(params.id)
+    result
   }
 }

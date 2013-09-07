@@ -14,10 +14,21 @@
      <table class="table table-bordered table-striped">
        <thead>
          <tr>
-           <td>Properties</td>
+           <td>Label</td>
+           <td>Property Name</td>
+           <td>Required?</td>
+           <td>Rules</td>
          </tr>
        </thead>
        <tbody>
+         <g:each in="${schema.props}" var="p">
+           <tr>
+             <td>${p.label}</td>
+             <td>${p.name}</td>
+             <td>${p.mandatory}</td>
+             <td></td>
+           </tr>
+         </g:each>
        </tbody>
      </table>
    </div>
