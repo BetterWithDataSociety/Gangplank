@@ -4,6 +4,9 @@ import au.com.bytecode.opencsv.CSVReader
 
 class SubmitController {
 
+  // Inject es wrapper service
+  def ESWrapperService
+
   def index() { }
 
   def processSubmission() {
@@ -38,4 +41,7 @@ class SubmitController {
 
   }
 
+  def reset() {
+    ESWrapperService.clearDownAndInitES()
+  }
 }

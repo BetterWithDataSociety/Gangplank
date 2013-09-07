@@ -26,8 +26,9 @@
           <div class="nav-collapse">
             <ul class="nav">
               <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Search</a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin</a>
                 <ul class="dropdown-menu">
+                  <li><g:link controller="subit" action="reset">Reset</g:link></li>
                 </ul>
               </li>
               <li class="dropdown">
