@@ -28,7 +28,7 @@
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin</a>
                 <ul class="dropdown-menu">
-                  <li><g:link controller="subit" action="reset">Reset</g:link></li>
+                  <li><g:link controller="submit" action="reset">Reset</g:link></li>
                 </ul>
               </li>
               <li class="dropdown">
