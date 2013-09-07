@@ -80,6 +80,7 @@ class ESWrapperService {
       def future = index_admin_client.delete {
         indices 'gangplank'
       }
+      future.get()l
     }
     catch ( Exception e ) {
       log.warn("Problem deleting index...",e);
