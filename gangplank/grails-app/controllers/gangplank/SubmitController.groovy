@@ -44,7 +44,6 @@ class SubmitController {
         log.debug(" Row ${data_rownum++}...");
         def record_to_index = [:]
 
-        record_to_index.gangplankDatafileId = 'Some identifier for the datafile in the db'
         record_to_index.gangplankTimestamp = new Date();
         record_to_index.sourceFile = new_datafile.guid
 
@@ -63,6 +62,7 @@ class SubmitController {
             // id idx_record['_id']
             source record_to_index
           }
+          future.get()
         }
 
 
