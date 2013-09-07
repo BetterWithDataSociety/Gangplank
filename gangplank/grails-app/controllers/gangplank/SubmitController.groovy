@@ -20,6 +20,7 @@ class SubmitController {
       def input_stream = request.getFile("submissionFile")?.inputStream
 
       def gangplank_schema = 'Finance.Expenses';
+      def new_datafile = new Datafile(schema:Schema.findByName(gangplank_schema), guid:java.util.UUID.randomUUID().toString()).save()
 
       log.debug("Done");
 
@@ -45,22 +46,29 @@ class SubmitController {
 
         record_to_index.gangplankDatafileId = 'Some identifier for the datafile in the db'
         record_to_index.gangplankTimestamp = new Date();
+        record_to_index.sourceFile = new_datafile.guid
 
         nl.each { str ->
           log.debug("  -> ${str}");
-          record_to_index[coldefs[col++]] = str
+          record_to_index[coldefs[col++].toLowerCase()] = str
         }
 
-        log.debug("Record I'm going to throw at ES: ${record_to_index}");
-        def future = esclient.index {
-          index "gangplank"
-          type gangplank_schema
-          // id idx_record['_id']
-          source record_to_index
+        // This if emulates the schema validation rules.. here I'm pretending that the rule is
+        // name must not be null.
+        if ( ( record_to_index.name != null ) && ( record_to_index.name.length() > 0 ) ) {
+          log.debug("Record I'm going to throw at ES: ${record_to_index}");
+          def future = esclient.index {
+            index "gangplank"
+            type gangplank_schema
+            // id idx_record['_id']
+            source record_to_index
+          }
         }
 
 
       }
+
+      redirect(controller:'browse', action:'index', params:[file:new_datafile.guid, schema:gangplank_schema]);
     }
 
   }
