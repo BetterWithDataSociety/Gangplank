@@ -67,8 +67,6 @@ class SubmitController {
           }
           future.get()
         }
-
-
       }
 
       redirect(controller:'browse', 
