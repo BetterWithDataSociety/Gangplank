@@ -2,6 +2,10 @@ package gangplank
 
 class Property {
 
-    static constraints = {
-    }
+  static belongsTo = [
+    schema:Schema
+  ]
+
+  static constraints = {
+  }
 }

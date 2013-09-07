@@ -2,6 +2,13 @@ package gangplank
 
 class Schema {
 
-    static constraints = {
-    }
+  String name
+
+  static hasMany = [ props : Property ]
+  static mappedBy = [ props : 'schema' ]
+
+  static constraints = {
+  }
+
+
 }

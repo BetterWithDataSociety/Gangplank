@@ -2,6 +2,8 @@ package gangplank
 
 class Datafile {
 
-    static constraints = {
-    }
+  Schema schema
+
+  static constraints = {
+  }
 }
