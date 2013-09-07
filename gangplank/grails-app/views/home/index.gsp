@@ -11,11 +11,15 @@
      <div class="row-fluid">
        <table class="table table-bordered">
          <thead>
-           <tr><td>File ID</td><td>Schema</td></tr>
+           <tr><td>File ID</td><td>Filename</td><td>Schema</td></tr>
          </thead>
          <tbody>
            <g:each in="${files}" var="f">
-             <tr><td><g:link controller="browse" action="index" params="${[schema:f.schema.name,q:"sourceFile:\"${f.guid}\""]}">${f.guid}</g:link></td><td>${f.schema.name}</td></tr>
+             <tr>
+               <td><g:link controller="browse" action="index" params="${[schema:f.schema.name,q:"sourceFile:\"${f.guid}\""]}">${f.guid}</g:link></td>
+               <td>${f.filename}</td>
+               <td>${f.schema.name}</td>
+             </tr>
            </g:each>
          </tbody>
        </table>

@@ -20,7 +20,9 @@ class SubmitController {
       def input_stream = request.getFile("submissionFile")?.inputStream
 
       def gangplank_schema = 'Finance.Expenses';
-      def new_datafile = new Datafile(schema:Schema.findByName(gangplank_schema), guid:java.util.UUID.randomUUID().toString()).save()
+      def new_datafile = new Datafile(schema:Schema.findByName(gangplank_schema), 
+                                      guid:java.util.UUID.randomUUID().toString(),
+                                      filename:upload_filename).save()
 
       log.debug("Done");
 
