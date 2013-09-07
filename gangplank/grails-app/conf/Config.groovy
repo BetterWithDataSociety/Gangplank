@@ -111,3 +111,5 @@ log4j = {
 grails.plugins.springsecurity.userLookup.userDomainClassName = 'gangplank.User'
 grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'gangplank.UserRole'
 grails.plugins.springsecurity.authority.className = 'gangplank.Role'
+
+grails.plugins.twitterbootstrap.fixtaglib = true
