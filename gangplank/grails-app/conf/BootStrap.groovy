@@ -4,6 +4,11 @@ class BootStrap {
 
   def init = { servletContext ->
 
+    RefdataCategory.lookupOrCreate('DatafileStatus', 'Pending Compliance Review')
+    RefdataCategory.lookupOrCreate('DatafileStatus', 'Publication Denied')
+    RefdataCategory.lookupOrCreate('DatafileStatus', 'Published')
+
+
     def expenses_props = [ [ label:'Name', propname:'name'], 
                            [ label:'Cost Centre', propname:'costcentre'], 
                            [ label:'Amount', propname:'amount'] ]

@@ -22,7 +22,8 @@ class SubmitController {
       def gangplank_schema = 'Finance.Expenses';
       def new_datafile = new Datafile(schema:Schema.findByName(gangplank_schema), 
                                       guid:java.util.UUID.randomUUID().toString(),
-                                      filename:upload_filename).save()
+                                      filename:upload_filename,
+                                      status:RefdataCategory.lookupOrCreate('DatafileStatus', 'Pending Compliance Review')).save()
 
       log.debug("Done");
 
