@@ -29,6 +29,10 @@ class BrowseController {
         query {
           query_string (query: query_str)
         }
+        sort = [
+          '_id' : [ 'order' : 'asc' ]
+        ]
+
       }
     }
 

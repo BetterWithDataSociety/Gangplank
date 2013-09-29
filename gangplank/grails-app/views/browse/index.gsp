@@ -25,7 +25,7 @@
        <span class="pull-right">
          <g:link action="download" params="${params+[format:'csv']}">Download CSV</g:link>
        </span>
-       <table class="table table-bordered">
+       <table id="dataBrowseTable" class="table table-bordered">
          <thead>
            <tr>
              <g:each in="${schemaInfo.props}" var="prop">
@@ -58,5 +58,10 @@
 
    </div>
   
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $('#dataBrowseTable').dataTable();
+      }
+    </script>
   </body>
 </html>

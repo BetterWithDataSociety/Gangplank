@@ -10,5 +10,9 @@ class Schema {
   static constraints = {
   }
 
+  static mapping = {
+    table 'gpschema'
+    props sort:'id', order:'asc'
+  }
 
 }
