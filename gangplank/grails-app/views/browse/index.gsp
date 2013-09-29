@@ -4,6 +4,8 @@
     <meta name="layout" content="main"/>
     <title>Gangplank</title>
     <r:require modules="gangplank"/>
+    <r:require module="jquery-ui"/>
+    <r:require module="dataTables"/>
   </head>
   <body>
 
@@ -61,7 +63,7 @@
     <script type="text/javascript">
       $(document).ready(function() {
         $('#dataBrowseTable').dataTable();
-      }
+      });
     </script>
   </body>
 </html>

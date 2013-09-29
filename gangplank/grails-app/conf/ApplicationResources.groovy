@@ -9,6 +9,10 @@ modules = {
     // resource url:'js/moment.min.js'
     // resource url:'js/select2.min.js'
   }
+  dataTables {
+    resource url:'css/jquery.dataTables.css'
+    resource url:'js/jquery.dataTables.min.js'
+  }
   overrides {
     'bootstrap-css' {
       resource id: 'bootstrap-css', url:'/css/gangplank-bootstrap-2.min.css'
