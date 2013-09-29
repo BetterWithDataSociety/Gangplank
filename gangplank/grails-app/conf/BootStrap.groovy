@@ -2,6 +2,8 @@ import gangplank.*
 
 class BootStrap {
 
+  def grailsApplication
+
   def init = { servletContext ->
 
    // Global System Roles
