@@ -44,6 +44,16 @@ class BootStrap {
     RefdataCategory.lookupOrCreate('DatafileStatus', 'Publication Denied')
     RefdataCategory.lookupOrCreate('DatafileStatus', 'Published')
 
+    RefdataCategory.lookupOrCreate('Category', 'Adult Social Services')
+    RefdataCategory.lookupOrCreate('Category', 'Children, Young People and Education')
+    RefdataCategory.lookupOrCreate('Category', 'Council Information')
+    RefdataCategory.lookupOrCreate('Category', 'Democracy')
+    RefdataCategory.lookupOrCreate('Category', 'Employees')
+    RefdataCategory.lookupOrCreate('Category', 'Environment')
+    RefdataCategory.lookupOrCreate('Category', 'Finance')
+    RefdataCategory.lookupOrCreate('Category', 'Housing')
+    RefdataCategory.lookupOrCreate('Category', 'Planning and Land')
+    RefdataCategory.lookupOrCreate('Category', 'Property')
 
     def expenses_props = [ [ label:'Name', propname:'name'], 
                            [ label:'Cost Centre', propname:'costcentre'], 

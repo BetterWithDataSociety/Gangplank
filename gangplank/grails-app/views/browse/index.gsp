@@ -31,10 +31,10 @@
          <thead>
            <tr>
              <g:each in="${schemaInfo.props}" var="prop">
-               <td>${prop.label}</td>
+               <th>${prop.label}</th>
              </g:each>
-             <td>Timestamp</td>
-             <td>Source File</td>
+             <th>Timestamp</th>
+             <th>Source File</th>
            </tr>
          </thead>
          <tbody>
