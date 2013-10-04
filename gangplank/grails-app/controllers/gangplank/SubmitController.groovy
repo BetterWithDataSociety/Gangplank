@@ -48,14 +48,15 @@ class SubmitController {
         }
       }
       else {
-        log.debug("Lookup schema with id ${schemaid}");
-        schema = Schema.get(schemaid);
+        log.debug("Lookup schema with id ${params.schemaid}");
+        schema = Schema.get(params.schemaid);
       }
 
       def new_datafile = new Datafile(schema:schema,
                                       guid:java.util.UUID.randomUUID().toString(),
                                       filename:upload_filename,
-                                      status:RefdataCategory.lookupOrCreate('DatafileStatus', 'Pending Compliance Review')).save()
+                                      status:RefdataCategory.lookupOrCreate('DatafileStatus', 'Pending Compliance Review'),
+                                      category:RefdataValue.get(params.catid)).save()
 
       def gangplank_schema = schema.name
 
@@ -90,7 +91,7 @@ class SubmitController {
           log.debug("Record I'm going to throw at ES: ${record_to_index}");
           def future = esclient.index {
             index "gangplank"
-            type gangplank_schema
+            type "${schema.id}"
             // id idx_record['_id']
             source record_to_index
           }

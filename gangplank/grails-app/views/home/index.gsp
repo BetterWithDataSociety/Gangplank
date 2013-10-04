@@ -15,6 +15,7 @@
              <td>File ID</td>
              <td>Status</td>
              <td>Filename</td>
+             <td>Category</td>
              <td>Schema</td>
           </tr>
          </thead>
@@ -24,6 +25,7 @@
                <td><g:link controller="browse" action="index" params="${[schema:f.schema.name,q:"sourceFile:\"${f.guid}\""]}">${f.guid}</g:link></td>
                <td>${f.status?.value}</td>
                <td>${f.filename}</td>
+               <td>${f.category?.value}</td>
                <td>${f.schema.name}</td>
              </tr>
            </g:each>

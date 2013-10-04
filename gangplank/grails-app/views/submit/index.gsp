@@ -28,6 +28,15 @@
            </div>
 
            <div class="control-group">
+             <dt>Category</dt>
+             <dd><g:select id="catid" name='catid' 
+                   from='${gangplank.RefdataValue.findAll("from RefdataValue as rdv where rdv.owner.desc='Category'")}'
+                   optionKey="id" optionValue="value"></g:select></dd>
+           </div>
+
+
+
+           <div class="control-group">
              <dt>FileType</dt>
              <dd><select name="type">
                     <option value="csv">CSV</option>

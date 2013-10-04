@@ -6,6 +6,7 @@ class Datafile {
   String guid
   String filename
   RefdataValue status
+  RefdataValue category
 
   static constraints = {
   }
