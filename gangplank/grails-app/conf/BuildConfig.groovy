@@ -17,6 +17,7 @@ grails.project.dependency.resolution = {
         // specify dependency exclusions here; for example, uncomment this to disable ehcache:
         // excludes 'ehcache'
     }
+    resolver = "maven"
     log "error" // log level of Ivy resolver, either 'error', 'warn', 'info', 'debug' or 'verbose'
     checksums true // Whether to verify checksums on resolve
     legacyResolve false // whether to do a secondary resolve on plugin installation, not advised and here for backwards compatibility
@@ -47,8 +48,9 @@ grails.project.dependency.resolution = {
         runtime 'org.elasticsearch:elasticsearch-lang-groovy:1.4.0'
     }
 
+
     plugins {
-        runtime ":hibernate:$grailsVersion"
+        runtime ':hibernate:3.6.10.M3' 
         runtime ":jquery:1.8.3"
         runtime ":resources:1.2"
 
@@ -57,10 +59,14 @@ grails.project.dependency.resolution = {
         //runtime ":cached-resources:1.0"
         //runtime ":yui-minify-resources:0.1.5"
 
-        build ":tomcat:$grailsVersion"
+        build ':tomcat:7.0.40.1'
 
         runtime ":database-migration:1.3.2"
 
         compile ':cache:1.0.1'
+
+        compile ':mail:1.0.1', {
+           excludes 'spring-test'
+        }  
     }
 }
