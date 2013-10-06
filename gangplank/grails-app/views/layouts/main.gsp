@@ -45,6 +45,7 @@
                   <ul class="dropdown-menu">
                     <li><g:link controller="logout">Logout</g:link></li>
                   </ul>
+                  <li><g:link controller="settings" action="index"><i class="icon-wrench icon-white"></i></g:link></li>
                 </li>
               </sec:ifLoggedIn>
               <sec:ifNotLoggedIn>
