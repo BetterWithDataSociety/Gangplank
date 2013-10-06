@@ -25,19 +25,18 @@
           <g:link controller="home" action="index" class="brand">GangPlank</g:link>
           <div class="nav-collapse">
             <ul class="nav">
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin</a>
-                <ul class="dropdown-menu">
-                  <li><g:link controller="submit" action="reset">Reset</g:link></li>
-                  <li><g:link controller="schema" action="index">Schemas</g:link></li>
-                  <li><g:link controller="submit" action="index">Upload</g:link></li>
-                </ul>
-              </li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Create</a>
-                <ul class="dropdown-menu">
-                </ul>
-              </li>
+              <sec:ifLoggedIn>
+                <sec:ifAnyGranted roles="ROLE_ADMIN">
+                  <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin</a>
+                    <ul class="dropdown-menu">
+                      <li><g:link controller="submit" action="reset">Reset</g:link></li>
+                      <li><g:link controller="schema" action="index">Schemas</g:link></li>
+                      <li><g:link controller="submit" action="index">Upload</g:link></li>
+                    </ul>
+                  </li>
+                </sec:ifAnyGranted>
+              </sec:ifLoggedIn>
             </ul>
             <ul class="nav pull-right">
               <sec:ifLoggedIn>
