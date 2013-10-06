@@ -41,10 +41,15 @@
             <ul class="nav pull-right">
               <sec:ifLoggedIn>
                 <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">${request.user?.username} <b class="caret"></b></a>
+                  <ul class="dropdown-menu">
+                    <li><g:link controller="logout">Logout</g:link></li>
+                  </ul>
                 </li>
               </sec:ifLoggedIn>
               <sec:ifNotLoggedIn>
                 <li><g:link controller="register" action="index">Register</g:link></li>
+                <li><g:link controller="login" action="index">LogIn</g:link></li>
               </sec:ifNotLoggedIn>
             </ul>
           </div>
