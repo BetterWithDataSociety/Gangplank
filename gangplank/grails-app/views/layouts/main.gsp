@@ -45,7 +45,7 @@
                 </li>
               </sec:ifLoggedIn>
               <sec:ifNotLoggedIn>
-                <li>Not logged in</li>
+                <li><g:link controller="register" action="index">Register</g:link></li>
               </sec:ifNotLoggedIn>
             </ul>
           </div>
