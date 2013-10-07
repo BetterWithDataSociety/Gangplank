@@ -114,9 +114,35 @@ grails.plugins.springsecurity.authority.className = 'gangplank.Role'
 
 grails.plugins.twitterbootstrap.fixtaglib = true
 
+grails.plugins.springsecurity.ui.password.minLength = 6
+grails.plugins.springsecurity.ui.password.maxLength = 64
+grails.plugins.springsecurity.ui.password.validationRegex = '^.*$'
+
+//configure register
+grails.plugins.springsecurity.ui.register.emailFrom = "Gangplank<no-reply@ianibbo.me>"
+grails.plugins.springsecurity.ui.register.emailSubject = 'Welcome to Gangplank'
+grails.plugins.springsecurity.ui.register.defaultRoleNames = [
+        "ROLE_USER"
+]
+// The following 2 entries make the app use basic auth by default
+grails.plugins.springsecurity.useBasicAuth = true
+grails.plugins.springsecurity.basic.realmName = "gangplank"
+
+// This stanza then says everything should use form apart from /api
+// More info: http://stackoverflow.com/questions/7065089/how-to-configure-grails-spring-authentication-scheme-per-url
+grails.plugins.springsecurity.filterChain.chainMap = [
+        '/api/**': 'JOINED_FILTERS,-exceptionTranslationFilter',
+        '/**': 'JOINED_FILTERS,-basicAuthenticationFilter,-basicExceptionTranslationFilter'
+        // '/soap/deposit': 'JOINED_FILTERS,-exceptionTranslationFilter',
+        // '/rest/**': 'JOINED_FILTERS,-exceptionTranslationFilter'
+        // '/rest/**': 'JOINED_FILTERS,-basicAuthenticationFilter,-basicExceptionTranslationFilter'
+
+]
+
+
+
 // Uncomment and edit the following lines to start using Grails encoding & escaping improvements
 
-/* remove this line 
 // GSP settings
 grails {
     views {
@@ -136,4 +162,3 @@ grails {
         }
     }
 }
-remove this line */
