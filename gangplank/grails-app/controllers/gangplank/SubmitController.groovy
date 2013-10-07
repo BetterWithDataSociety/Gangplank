@@ -1,15 +1,106 @@
 package gangplank
 
 import au.com.bytecode.opencsv.CSVReader
+import java.security.MessageDigest
+import grails.plugins.springsecurity.Secured
 
 class SubmitController {
 
   // Inject es wrapper service
   def ESWrapperService
 
+  @Secured(['ROLE_USER', 'IS_AUTHENTICATED_FULLY'])
   def index() { }
 
+  @Secured(['ROLE_USER', 'IS_AUTHENTICATED_FULLY'])
   def processSubmission() {
+    if ( request.method == 'POST' ) {
+      try {
+        def upload_mime_type = request.getFile("submissionFile")?.contentType
+        def upload_filename = request.getFile("submissionFile")?.getOriginalFilename()
+        // def input_stream = request.getFile("submissionFile")?.inputStream
+
+        // store input stream locally
+        def temp_file = copyUploadedFile(request.getFile("submissionFile"));
+  
+        // validate syntax
+        def validation_result = validateSyntax(temp_file)
+        
+        // analyze
+        if ( validation_result.status == true ) {
+          def analysis = analyze(temp_file, validation_result);
+          render(view:'validDatafile', model:[:]);
+        }
+        else {
+          render(view:'invalidDatafile', model:[:]);
+        }
+
+      }
+      finally {
+      }
+    }
+  }
+
+  def copyUploadedFile(inputfile) {
+    log.debug("copyUploadedFile...");
+    def deposit_token = java.util.UUID.randomUUID().toString();
+    validateUploadDir('./filestore');
+    def temp_file_name = "./filestore/${deposit_token}";
+    def temp_file = new File(temp_file_name);
+  
+    // Copy the upload file to a temporary space
+    inputfile.transferTo(temp_file);
+
+    temp_file
+  }
+
+  def validateSyntax(inputfile) {
+    log.debug("validateSyntax...");
+    def result = [:];
+    result.status = false;
+    try {
+      def input_stream = new FileInputStream(inputfile);
+      CSVReader r = null
+      if ( params.type=="csv" ) {
+        r = new CSVReader( new InputStreamReader(input_stream, java.nio.charset.Charset.forName('UTF-8') ), (char)',' )
+      }
+      else {
+        r = new CSVReader( new InputStreamReader(input_stream, java.nio.charset.Charset.forName('UTF-8') ), (char)'\t' )
+      }
+
+      String[] coldefs
+      String[] nl
+      coldefs = r.readNext()
+      while ((nl = r.readNext()) != null) {
+      }
+
+      result.status = true
+    }
+    catch ( Exception e ) {
+      log.error("Problem",e);
+    }
+    result
+  }
+
+  def analyze(temp_file, validation_result) {
+    log.debug("analyze...");
+
+    // Create a checksum for the file..
+    MessageDigest md5_digest = MessageDigest.getInstance("MD5");
+    InputStream md5_is = new FileInputStream(temp_file);
+    byte[] md5_buffer = new byte[8192];
+    int md5_read = 0;
+    while( (md5_read = md5_is.read(md5_buffer)) >= 0) {
+      md5_digest.update(md5_buffer, 0, md5_read);
+    }
+    md5_is.close();
+    byte[] md5sum = md5_digest.digest();
+    String md5sumHex = new BigInteger(1, md5sum).toString(16);
+
+    log.debug("MD5 is ${md5sumHex}");
+  }
+
+  def oldProcessSubmission() {
 
     org.elasticsearch.groovy.node.GNode esnode = ESWrapperService.getNode()
     org.elasticsearch.groovy.client.GClient esclient = esnode.getClient()
@@ -109,5 +200,13 @@ class SubmitController {
   def reset() {
     ESWrapperService.clearDownAndInitES()
     redirect(action:'index');
+  }
+
+  private def validateUploadDir(path) {
+    File f = new File(path);
+    if ( ! f.exists() ) {
+      log.debug("Creating upload directory path")
+      f.mkdirs();
+    }
   }
 }
