@@ -40,6 +40,8 @@ class BootStrap {
       f.mkdirs()
     }
 
+    RefdataCategory.lookupOrCreate('DatafileStatus', 'Validated')
+    RefdataCategory.lookupOrCreate('DatafileStatus', 'Processed')
     RefdataCategory.lookupOrCreate('DatafileStatus', 'Pending Compliance Review')
     RefdataCategory.lookupOrCreate('DatafileStatus', 'Publication Denied')
     RefdataCategory.lookupOrCreate('DatafileStatus', 'Published')
