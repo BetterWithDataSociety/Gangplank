@@ -33,6 +33,7 @@ class SubmitController {
           def analysis = analyze(temp_file, validation_result, datafile);
           def process_result = process(temp_file, upload_filename, upload_mime_type, datafile)
 
+          log.debug("Datafile: ${datafile}");
           redirect(controller:'browse', action:'datafile', id:datafile.guid);
         }
         else {
@@ -295,6 +296,10 @@ class SubmitController {
           }
           future.get()
         }
+      }
+
+      synchronized(this) {
+        Thread.sleep(500);
       }
 
       redirect(controller:'browse', 
