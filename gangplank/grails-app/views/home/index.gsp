@@ -22,7 +22,7 @@
          <tbody>
            <g:each in="${files}" var="f">
              <tr>
-               <td><g:link controller="browse" action="index" params="${[schema:f.schema.name,q:"sourceFile:\"${f.guid}\""]}">${f.guid}</g:link></td>
+               <td><g:link controller="browse" action="datafile" id="${f.guid}">${f.guid}</g:link></td>
                <td>${f.status?.value}</td>
                <td>${f.filename}</td>
                <td>${f.category?.value}</td>
