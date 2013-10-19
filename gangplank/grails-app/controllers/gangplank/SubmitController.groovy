@@ -29,11 +29,11 @@ class SubmitController {
         // analyze
         if ( validation_result.status == true ) {
 
-          def analysis = analyze(temp_file, validation_result);
-          def process_result = process(temp_file, upload_filename, upload_mime_type)
+          def datafile = createDatafile(null, upload_filename)
+          def analysis = analyze(temp_file, validation_result, datafile);
+          def process_result = process(temp_file, upload_filename, upload_mime_type, datafile)
 
-          redirect(controller:'browse', action:'datafile', id:process_result.datafile.guid);
-          // render(view:'validDatafile', model:[:]);
+          redirect(controller:'browse', action:'datafile', id:datafile.guid);
         }
         else {
           render(view:'invalidDatafile', model:[:]);
@@ -101,7 +101,7 @@ class SubmitController {
     result
   }
 
-  def analyze(temp_file, validation_result) {
+  def analyze(temp_file, validation_result, datafile) {
     log.debug("analyze...");
 
     // Create a checksum for the file..
@@ -119,7 +119,7 @@ class SubmitController {
     log.debug("MD5 is ${md5sumHex}");
   }
 
-  def process(inputfile, upload_filename, upload_mime_type) {
+  def process(inputfile, upload_filename, upload_mime_type, datafile) {
 
     def result = [:]
 
@@ -157,11 +157,10 @@ class SubmitController {
       log.debug("Lookup schema with id ${params.schemaid}");
       schema = Schema.get(params.schemaid);
     }
+    datafile.schema = schema;
+    datafile.save(flush:true);
 
     def gangplank_schema = schema.name
-    result.datafile = createDatafile(schema,upload_filename)
-
-    log.debug("result.datafile = ${result.datafile}");
 
     def data_rownum = 0;
 
@@ -171,7 +170,7 @@ class SubmitController {
       def record_to_index = [:]
 
       record_to_index.gangplankTimestamp = new Date();
-      record_to_index.sourceFile = result.datafile.guid
+      record_to_index.sourceFile = datafile.guid
 
       boolean row_has_at_least_one_value = false
 
