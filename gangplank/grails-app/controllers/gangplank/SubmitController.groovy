@@ -103,6 +103,8 @@ class SubmitController {
   }
 
   def analyze(temp_file, validation_result, datafile) {
+    def analysis_result = [:]
+
     log.debug("analyze...");
 
     // Create a checksum for the file..
@@ -115,9 +117,30 @@ class SubmitController {
     }
     md5_is.close();
     byte[] md5sum = md5_digest.digest();
-    String md5sumHex = new BigInteger(1, md5sum).toString(16);
+    analysis_result.md5sumHex = new BigInteger(1, md5sum).toString(16);
 
-    log.debug("MD5 is ${md5sumHex}");
+    def t = new org.apache.tika.Tika()
+    analysis_result.content_type = t.detect(temp_file)
+
+    def input_stream = new FileInputStream(inputfile);
+    CSVReader r = null
+    if ( params.type=="csv" ) {
+      r = new CSVReader( new InputStreamReader(input_stream, java.nio.charset.Charset.forName('UTF-8') ), (char)',' )
+    }
+    else {
+      r = new CSVReader( new InputStreamReader(input_stream, java.nio.charset.Charset.forName('UTF-8') ), (char)'\t' )
+    }
+
+    String[] coldefs
+    analysis_result.coldefs = r.readNext()
+
+    log.debug("Analysis result = ${analysis_result}");
+
+    analysis_result
+  }
+
+  def map() {
+    log.debug("Map...");
   }
 
   def process(inputfile, upload_filename, upload_mime_type, datafile) {
@@ -167,7 +190,7 @@ class SubmitController {
 
     while ((nl = r.readNext()) != null) {
       int col=0;
-      log.debug(" Row ${data_rownum++}...");
+      // log.debug(" Row ${data_rownum++}...");
       def record_to_index = [:]
 
       record_to_index.gangplankTimestamp = new Date();
@@ -190,7 +213,7 @@ class SubmitController {
       // This if emulates the schema validation rules.. here I'm pretending that the rule is
       // name must not be null.
       if ( row_has_at_least_one_value ) {
-        log.debug("Record I'm going to throw at ES: ${record_to_index}");
+        // log.debug("Record I'm going to throw at ES: ${record_to_index}");
         def future = esclient.index {
           index "gangplank"
           type "${schema.id}"

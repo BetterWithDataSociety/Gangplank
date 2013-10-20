@@ -46,6 +46,7 @@ grails.project.dependency.resolution = {
         runtime 'net.sf.opencsv:opencsv:2.0'
         runtime 'com.googlecode.juniversalchardet:juniversalchardet:1.0.3'
         runtime 'org.elasticsearch:elasticsearch-lang-groovy:1.4.0'
+        runtime 'org.apache.tika:tika-core:1.4'
     }
 
 
