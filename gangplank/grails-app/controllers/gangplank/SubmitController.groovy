@@ -29,11 +29,12 @@ class SubmitController {
         // analyze
         if ( validation_result.status == true ) {
 
-          def analysis = analyze(temp_file, validation_result);
-          def process_result = process(temp_file, upload_filename, upload_mime_type)
+          def datafile = createDatafile(null, upload_filename)
+          def analysis = analyze(temp_file, validation_result, datafile);
+          def process_result = process(temp_file, upload_filename, upload_mime_type, datafile)
 
-          redirect(controller:'browse', action:'datafile', id:process_result.datafile.guid);
-          // render(view:'validDatafile', model:[:]);
+          log.debug("Datafile: ${datafile}");
+          redirect(controller:'browse', action:'datafile', id:datafile.guid);
         }
         else {
           render(view:'invalidDatafile', model:[:]);
@@ -101,7 +102,9 @@ class SubmitController {
     result
   }
 
-  def analyze(temp_file, validation_result) {
+  def analyze(temp_file, validation_result, datafile) {
+    def analysis_result = [:]
+
     log.debug("analyze...");
 
     // Create a checksum for the file..
@@ -114,12 +117,33 @@ class SubmitController {
     }
     md5_is.close();
     byte[] md5sum = md5_digest.digest();
-    String md5sumHex = new BigInteger(1, md5sum).toString(16);
+    analysis_result.md5sumHex = new BigInteger(1, md5sum).toString(16);
 
-    log.debug("MD5 is ${md5sumHex}");
+    def t = new org.apache.tika.Tika()
+    analysis_result.content_type = t.detect(temp_file)
+
+    def input_stream = new FileInputStream(inputfile);
+    CSVReader r = null
+    if ( params.type=="csv" ) {
+      r = new CSVReader( new InputStreamReader(input_stream, java.nio.charset.Charset.forName('UTF-8') ), (char)',' )
+    }
+    else {
+      r = new CSVReader( new InputStreamReader(input_stream, java.nio.charset.Charset.forName('UTF-8') ), (char)'\t' )
+    }
+
+    String[] coldefs
+    analysis_result.coldefs = r.readNext()
+
+    log.debug("Analysis result = ${analysis_result}");
+
+    analysis_result
   }
 
-  def process(inputfile, upload_filename, upload_mime_type) {
+  def map() {
+    log.debug("Map...");
+  }
+
+  def process(inputfile, upload_filename, upload_mime_type, datafile) {
 
     def result = [:]
 
@@ -157,21 +181,20 @@ class SubmitController {
       log.debug("Lookup schema with id ${params.schemaid}");
       schema = Schema.get(params.schemaid);
     }
+    datafile.schema = schema;
+    datafile.save(flush:true);
 
     def gangplank_schema = schema.name
-    result.datafile = createDatafile(schema,upload_filename)
-
-    log.debug("result.datafile = ${result.datafile}");
 
     def data_rownum = 0;
 
     while ((nl = r.readNext()) != null) {
       int col=0;
-      log.debug(" Row ${data_rownum++}...");
+      // log.debug(" Row ${data_rownum++}...");
       def record_to_index = [:]
 
       record_to_index.gangplankTimestamp = new Date();
-      record_to_index.sourceFile = result.datafile.guid
+      record_to_index.sourceFile = datafile.guid
 
       boolean row_has_at_least_one_value = false
 
@@ -190,7 +213,7 @@ class SubmitController {
       // This if emulates the schema validation rules.. here I'm pretending that the rule is
       // name must not be null.
       if ( row_has_at_least_one_value ) {
-        log.debug("Record I'm going to throw at ES: ${record_to_index}");
+        // log.debug("Record I'm going to throw at ES: ${record_to_index}");
         def future = esclient.index {
           index "gangplank"
           type "${schema.id}"
@@ -296,6 +319,10 @@ class SubmitController {
           }
           future.get()
         }
+      }
+
+      synchronized(this) {
+        Thread.sleep(500);
       }
 
       redirect(controller:'browse', 
